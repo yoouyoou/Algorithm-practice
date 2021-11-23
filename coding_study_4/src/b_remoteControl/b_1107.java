@@ -66,7 +66,6 @@ public class b_1107 {
 			System.out.println(Math.abs(channel)-100);	// 위아래버튼 횟수 출력
 			return;
 		}*/
-		
 	}
 	
 	public static int solution(int channel, int chSize, ArrayList<Integer> btnArr) {
