@@ -18,10 +18,12 @@ public class Student20180983 {
 			int n2 = sc.nextInt();
 			for(int j = 0; j < n2; j++)
 				button[n1][j] = sc.nextInt();
+			for(int j = n2; j < 5; j++)
+				button[n1][j] = -1;	
 		}
 		
 		int[] clocks = new int[16];
-		for(int i = 0; i < 12; i++)
+		for(int i = 0; i < 16; i++)
 			clocks[i] = sc.nextInt();
 		sc.close();		
 		
@@ -39,36 +41,32 @@ public class Student20180983 {
 			else
 				bucket[i] = 0;
 			
-			if(max < bucket[i] && max != 3)
-				max = bucket[i];	// 눌러야 할 최대버튼수
+			if(bucket[i] > 0)
+				max++;
 		}
 		
-		/*int[] arr = {0,1,2,3,4,5,6,7,8,9};
-		boolean[] visited = new boolean[10];
-		for(int i = 0; i < 10; i++)
-			combination(arr, visited, 0, 10, max);*/
-		int[] temp = new int[max];
-		System.out.println("max값? :" + max);
-		comb(max, temp, 0, 0);
 		
+		int[] temp;
+		for(int i = max; i > 0; i--) {
+			temp = new int[i];
+			comb(i, temp, 0, 0);
+		}
 		System.out.println(answer);
 		return;
 	}
 	
-	// 중복 조합
+	// repeat combination
 	static void comb(int r, int[] temp, int current, int start) {
-		if(r == current) {				//r개 다 뽑았을 때
+		if(r == current) {
 			for(int i = 0; i < temp.length; i++) {
-				int k = temp[i];		// temp:뽑은 버튼 넣어놓은 배열
-				if(button[k].length == 5) {
-					for(int j = 0; j < 5; j++)
-						bucket_count[button[k][j]]++; 
-				}else {
-					for(int j = 0; button[k][j] != 0; j++)
-						bucket_count[button[k][j]]++; 
+				int k = temp[i];
+				for(int j = 0; button[k][j] != -1; j++) {
+					bucket_count[button[k][j]]++;
+					if(j == 4)
+						break;
 				}
 			}
-			int rslt = checkEqual_2(bucket, bucket_count);
+			int rslt = checkEqual(bucket, bucket_count);
 			for(int i = 0; i < 16; i++)
 				bucket_count[i] = 0;
 			if(rslt == 1) {
@@ -84,48 +82,11 @@ public class Student20180983 {
 		}
 	}
 	
-	static int checkEqual_1(int[] arr, boolean[] visited, int n) {
-		int k;
-		for(int i = 0; i < n; i++) {
-			if(visited[i]) {
-				k = arr[i];
-				if(button[k].length ==5) {
-					for(int j = 0; j < 5; j++)
-						bucket_count[button[k][j]]++; 
-				}else {
-					for(int j = 0; button[k][j] != 0; j++)
-						bucket_count[button[k][j]]++; 
-				}
-			}
-		}
-		return checkEqual_2(bucket, bucket_count);
-	}
-	
-	// 같음(1)이면 모두 정각 바라봄
-	static int checkEqual_2(int[] bucket, int[] bucket_count) {
-		for(int i = 0; i < 15; i++)
+	static int checkEqual(int[] bucket, int[] bucket_count) {
+		for(int i = 0; i < 16; i++)
 			if(bucket[i] != bucket_count[i])
 				return -1;		//No equal
 		return 1;				//equal
-	}
-	
-	//조합
-	static void combination(int[] arr, boolean[] visited, int depth, int n, int r) {
-		if(r == 0) {
-			int rslt = checkEqual_1(arr, visited, n);
-			if(rslt == 1)
-				if(r < answer)
-					answer = r;
-			return;
-		}
-		if(depth == n)
-			return;
-		
-		visited[depth] = true;
-		combination(arr, visited, depth+1, n, r-1);
-		
-		visited[depth] = false;
-		combination(arr, visited, depth+1, n, r);
 	}
 	
 }
