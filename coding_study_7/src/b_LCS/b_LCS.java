@@ -31,6 +31,11 @@ public class b_LCS {
 			}
 		}
 		
+		for(int i = 0; i < A.length()+1; i++) {
+			for(int j = 0; j < B.length()+1; j++)
+				System.out.print(dp[i][j] + " ");
+			System.out.println();
+		}
 		System.out.println(dp[A.length()][B.length()]);
 		sc.close();
 		return;
