@@ -1,106 +1,103 @@
 package b_1753;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Arrays;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 //최단경로 (골드5)
 public class b_1753 {
-
-	static int[] weight;
-	static ArrayList<String>[] list;
-	static boolean check;
+	
+	static ArrayList<Node>[] list;
+	static int dist[];
+	static boolean[] visited;
 	
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		
 		int V = sc.nextInt();
 		int E = sc.nextInt();
 		int startV = sc.nextInt();
 		
-		weight = new int[V+1];
+		visited = new boolean[V+1];
 		list = new ArrayList[V+1];
-		for(int i = 1; i < V+1; i++)
-			list[i] = new ArrayList<String>();
+		dist = new int[V+1];
+		
+		Arrays.fill(dist, -1); 	//dist배열 -1로 채우기
+		dist[startV] = 0;		// 시작 정점
+		
+		for(int i = 1; i <= V; i++)
+			list[i] = new ArrayList<>();
 		
 		for(int i = 0; i < E; i++) {
-			//HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 			int u = sc.nextInt();
 			int v = sc.nextInt();
 			int w = sc.nextInt();
-			//map.put(v, w);
-			String temp = String.valueOf(v) + "," + String.valueOf(w);
-			list[u].add(temp);
-			//list[u].add(map);
+			list[u].add(new Node(v, w));
 		}
 		
-		//정점이 정렬되어져서 들어간 게 아님 
+		/*for(int i = 1; i <= V; i++) {
+			for(Node j : list[i])
+				System.out.print(j.node + " ");
+			System.out.println();
+		}*/
 		
-		for(int i = 1; i <= V; i++) {
-			if(i != startV) {
-				DFS(startV, i, 0);
-				if(check == false)
-					weight[i] = -1;
-			}
-		}
 		
+		Dijkstra(startV);
 		for(int i = 1; i <= V; i++) {
-			if(weight[i] == -1)
+			if(dist[i] == -1)
 				System.out.println("INF");
 			else
-				System.out.println(weight[i]);
+				System.out.println(dist[i]);
 		}
 		
-		sc.close();
-		return;
 	}
 	
-	static void DFS(int start, int destination, int total) {
-		if(start == destination) {
-			if(weight[destination] == 0 || total < weight[destination])
-				weight[destination] = total;
-			check = true;
-			return;
-		}
+	static void Dijkstra(int start) {
+		PriorityQueue<Node> q = new PriorityQueue<>();
 		
-		for(String str : list[start]) {
-			String[] s = str.split(",");
-			int v = Integer.parseInt(s[0]);
-			int w = Integer.parseInt(s[1]);
-			/*if(v == destination) {
-				total = w;
-				check = true;
-				return;
-			}*/
-			total += w;
-			check = false;
-			DFS(v, destination, total);
-		}
-	}
-
-	/*
-	static void DFS(int start, int destination) {
-		if(start == destination) {
-			check = true;
-			return;
-		}
+		q.add(new Node(start, 0)); //값 추가
+		//dist[start] = 0;
 		
-		for(String str : list[start]) {
-			String[] s = str.split(",");
-			int v = Integer.parseInt(s[0]);
-			int w = Integer.parseInt(s[1]);
-			if(v == destination) {
-				weight[destination] = w;
-				check = true;
-				return;
+		while(!q.isEmpty()) {
+			Node now = q.poll();	// 큐의 첫번째 값 반환후 제거
+			if(visited[now.node])
+				continue;
+			
+			visited[now.node] = true;
+			for(Node next : list[now.node]) {
+				if(dist[next.node]==-1 || dist[next.node] > dist[now.node]+next.weight) {
+					dist[next.node] = dist[now.node] + next.weight;
+					q.add(new Node(next.node, dist[next.node]));
+				}
 			}
-			weight[destination] += w;
-			check = false;
-			DFS(v, destination);
+		}
+		
+		/*
+		while(!q.isEmpty()) {
+			Node now = q.poll();	//큐의 첫번째 값 반환후 제거
+			if(!visited[now.node]) {
+				visited[now.node] = true;
+				for(Node next : list[now.node]) {
+					if(dist[next.node]==-1 || dist[next.node] > dist[now.node]+next.weight) {
+						dist[next.node] = dist[now.node] + next.weight;
+						q.offer(new Node(next.node, dist[next.node]));
+					}
+				}
+			}
+		}*/
+	}
+	
+	private static class Node implements Comparable<Node>{
+		int node, weight;
+		
+		Node(int n, int w){
+			this.node = n;
+			this.weight = w;
+		}
+		
+		public int compareTo(Node n) {
+			return weight - n.weight;
 		}
 	}
-	*/
 
 }
