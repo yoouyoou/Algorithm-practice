@@ -63,7 +63,7 @@ public class b_1167 {
 		}
 		
 		System.out.println("¹æ¹® ³¡! return:  " + 0);
-		visited = new boolean[V+1];
+		//visited = new boolean[V+1];
 		return total;
 	}
 	
