@@ -3,10 +3,9 @@ INDEX VERSION 1.131+C:\Users\user\Desktop\새 폴더\코테연습\.metadata\.plugins\or
 1327775072.index
 2828800103.index
 1912541260.index
-116924634.index
 1107277138.index
 831865309.index
-3751485681.index
 941821430.index
+3751485681.index
 3640059112.index
 1184002379.index
