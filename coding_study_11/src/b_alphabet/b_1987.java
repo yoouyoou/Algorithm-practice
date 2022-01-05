@@ -13,6 +13,7 @@ public class b_1987 {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+		//ArrayList<Integer> path = new
 		R = sc.nextInt();
 		C = sc.nextInt();
 		board = new char[R][C];
@@ -34,10 +35,10 @@ public class b_1987 {
 		if(answer < count)		// 최대 알파벳 방문개수 구하기 위해
 			answer = count;
 		
-		if(visited[board[r][c]-'A'] == true)	// 알파벳 이미 방문한 경우 리턴
+		if(visited[board[r][c]-65] == true)	// 알파벳 이미 방문한 경우 리턴
 			return;	
 		
-		visited[board[r][c]-'A'] = true;		// 방문 표시
+		visited[board[r][c]-65] = true;		// 방문 표시
 		//path.add(board[r][c]);
 		
 		for(int i = 0; i < 4; i++) {			
@@ -49,6 +50,7 @@ public class b_1987 {
 			}
 		}
 		visited[board[r][c]-'A'] = false;
+		//path.remove()
 		
 	}
 
