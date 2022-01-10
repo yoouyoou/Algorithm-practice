@@ -1,26 +1,34 @@
 package b_light_up;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 // 골드3
 public class b_11967 {
 	
-	static int answer = 0;
-	static int[][] grid;
+	static int count = 0;
+	static int N;
+	static int[] moveX = {-1, 1, 0, 0};	//상하좌우
+	static int[] moveY = {0, 0, -1, 1};
+	static boolean[][] grid, visited;
+	static ArrayList<String>[] list;
+	static HashMap<String, Integer> map;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
-		int N = sc.nextInt();
+		N = sc.nextInt();
 		int M = sc.nextInt();
-		
 		int temp = 1;
-		grid = new int[N+1][N+1];
-		String[] xy_arr = new String[M];
-		String[] ab_arr = new String[M];
-		HashMap<String, Integer> map = new HashMap<>();
+		
+		list = new ArrayList[M+1];
+		grid = new boolean[N+1][N+1];
+		visited = new boolean[N+1][N+1];
+		map = new HashMap<>();
+		
+		for(int i = 1; i <= M; i++)
+			list[i] = new ArrayList<String>();
 
 		// 각 요소 입력받아 배열에 저장
 		for(int i = 0; i < M; i++) {
@@ -31,63 +39,80 @@ public class b_11967 {
 			
 			String xy = x + "," + y;
 			String ab = a + "," + b;
-			xy_arr[i] = xy;
-			ab_arr[i] = ab;
 			
 			if(!map.containsKey(xy))
 				map.put(xy, temp++);
+			
+			list[map.get(xy)].add(ab);
 		}
 		
-		// 입력 배열 (1,1)를 맨 앞으로
-		for(int i = 0; i < M; i++) {
-			if(xy_arr[i].equals("1,1")) {
-				String temp2 = xy_arr[0];
-				xy_arr[0] = xy_arr[i];
-				xy_arr[i] = temp2;
-				break;
-			}
-		}
-				
-		
-		// grid 시작점 채우기
-		for(int i = 0; i < M; i++) {
-			int t1 = Integer.parseInt(xy_arr[i].split(",")[0]);
-			int t2 = Integer.parseInt(xy_arr[i].split(",")[1]);
-			grid[t1][t2] = map.get(xy_arr[i]);
-		}
-		
-		// grid 연결점 채우기
-		for(int i = 0; i < M; i++) {
-			int t1 = Integer.parseInt(ab_arr[i].split(",")[0]);
-			int t2 = Integer.parseInt(ab_arr[i].split(",")[1]);
-			if(grid[t1][t2] > 0) {
-				map.replace(ab_arr[i], map.get(xy_arr[i]));
-			}
-			grid[t1][t2] = map.get(xy_arr[i]);
-		}
-		
-		// grid 시작점 채우기
-		for(int i = 0; i < M; i++) {
-			int t1 = Integer.parseInt(xy_arr[i].split(",")[0]);
-			int t2 = Integer.parseInt(xy_arr[i].split(",")[1]);
-			grid[t1][t2] = map.get(xy_arr[i]);
-		}
-		
-		int ans = map.get("1,1");
-		for(int i = 0; i < M; i++)
-			if(map.get(xy_arr[i]) == ans)
-				answer++;
-
+		grid[1][1] = true;
+		DFS(1, 1);
 		
 		for(int i = 1; i <= N; i++) {
-			for(int j = 1; j <= N; j++) {
-				System.out.print(grid[i][j]);
-			}
+			for(int j = 1; j <= N; j++)
+				System.out.print(grid[i][j] + " ");
 			System.out.println();
 		}
 		
-		System.out.println(answer);
+		
+		System.out.println(count);
 		sc.close();
 	}
 
+	// 현재 방에서 킬 수 있는 불 다 켜기
+	public static void current_light(int x, int y) {
+		if(map.containsKey(x+","+y)) {
+			for(String next : list[map.get(x+","+y)]) {
+				int nextX = Integer.parseInt(next.split(",")[0]);
+				int nextY = Integer.parseInt(next.split(",")[1]);
+				if(nextX > 0 && nextX <= N && nextY > 0 && nextY <= N) {
+					grid[nextX][nextY] = true;
+				}
+			}
+		}
+		for(int i = 1; i <= N; i++) {
+			for(int j = 1; j <= N; j++)
+				System.out.print(grid[i][j] + " ");
+			System.out.println();
+		}
+		System.out.println();
+	}
+	
+	public static void DFS(int x, int y) {
+		System.out.println(x + " " +y);
+		if(grid[x][y] == false || visited[x][y] == true)	//불이 꺼져 있거나 이미 방문했던 곳이라면
+			return;											//바로 리턴
+		
+		visited[x][y] = true;	//방문표시
+		current_light(x, y);	//여기서 켤 수 있는 방의 불 모두 켜기
+		
+		for(int k = 0; k < 4; k++) {
+			int nx = x + moveX[k];
+			int ny = y + moveY[k];
+			if(nx > 0 && nx <= N && ny > 0 && ny <= N && grid[nx][ny]) //움직일 수 있는 곳이 true여야 함-불켜져있어야
+				DFS(nx, ny);
+		}
+	}
+	
+	/*
+	public static void DFS(int x, int y) {
+		//System.out.println("x: " + x + " y :" + y);
+		if(grid[x][y])
+			return;
+		
+		grid[x][y] = true;
+		count++;
+		
+		if(map.containsKey(x+","+y)) {
+			for(String next : list[map.get(x+","+y)]) {
+				int nextX = Integer.parseInt(next.split(",")[0]);
+				int nextY = Integer.parseInt(next.split(",")[1]);
+				if(nextX > 0 && nextX <= N && nextY > 0 && nextY <= N)
+					DFS(nextX, nextY);
+			}
+		}
+	}
+	*/
+	
 }
