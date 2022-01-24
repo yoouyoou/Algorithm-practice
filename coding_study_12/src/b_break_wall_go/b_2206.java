@@ -6,6 +6,16 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/*
+ 5 6
+010000
+111110
+000110
+000010
+111000
+-> 이거 답 10일껄
+ */
+
 //골드4
 public class b_2206 {
 	
@@ -46,6 +56,7 @@ public class b_2206 {
 		
 		while(!q.isEmpty()) {
 			Point point = q.poll();
+			System.out.println("대체 큐에서 뭐가 나온거: " + point.x + " " + point.y);
 			//도착지점
 			if(point.x == M-1 && point.y == N-1)
 				return point.dist;

@@ -32,34 +32,43 @@ public class b_1987 {
 		}
 		
 		dfs(0, 0, 0);
-		System.out.println(answer);
+		System.out.println(answer+1);
 		
 	}
 	
 	public static void dfs(int x, int y, int total) {
-		if(visited[x][y])
-			return;
+		visited[x][y] = true; 				//방문 표시
+		alphabet[board[x][y] - 65] = true;	//알파벳 사용표시
+		
+		System.out.println("[" + x + "]" + "[" + y +"] :" +total);
+		System.out.println("--------------------------");
+		for(int i = 0; i < R; i++) {
+			for(int j = 0; j < C; j++) {
+				if(visited[i][j])
+					System.out.print("T ");
+				else
+					System.out.print("F ");
+			}
+			System.out.println();
+		}
+		System.out.println("--------------------------");
 		
 		if(answer < total)
 			answer = total;
 		
-		visited[x][y] = true; 	//방문 표시
-		alphabet[board[x][y] - 65] = true;
-		answer++;
-		
 		for(int i = 0; i < 4; i++) {
 			int nx = x + dx[i];
 			int ny = y + dy[i];
+			//System.out.println("nx, ny값: " + nx +", "+ny);
 			
-			if(nx > 0 && nx < R && ny >0 && ny < C) {
-				if(!alphabet[board[nx][ny] - 65])
+			if(nx >= 0 && nx < R && ny >= 0 && ny < C) {
+				if(alphabet[board[nx][ny] - 65] == false && visited[nx][ny] == false) {
 					dfs(nx, ny, total+1);
+					alphabet[board[nx][ny] - 65] = false;
+					visited[nx][ny] = false;
+				}
 			}
-			
-			alphabet[board[x][y] - 65] = false;
-			visited[x][y] = false;
-		}
-			
+		}	
 	}
 
 }
