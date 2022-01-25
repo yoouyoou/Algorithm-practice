@@ -56,7 +56,7 @@ public class b_2206 {
 		
 		while(!q.isEmpty()) {
 			Point point = q.poll();
-			System.out.println("대체 큐에서 뭐가 나온거: " + point.x + " " + point.y);
+			System.out.println("대체 큐에서 뭐가 나온거야: " + point.x + " " + point.y);
 			//도착지점
 			if(point.x == M-1 && point.y == N-1)
 				return point.dist;
