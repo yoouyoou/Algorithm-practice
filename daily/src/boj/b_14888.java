@@ -58,7 +58,7 @@ public class b_14888 {
 	}
 	
 	public static void confirm(int[] result) {
-//		System.out.println("순열 검문 있겠습니다");
+//		System.out.println("순열 확인");
 //		for(int i = 0; i < N-1; i++)
 //			System.out.print(result[i]+" ");
 //		System.out.println();
