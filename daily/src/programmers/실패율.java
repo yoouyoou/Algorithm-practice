@@ -11,7 +11,7 @@ public class 실패율 {
 
 	public static void main(String[] args) {
 		int N = 5;
-		int[] stages = {2, 1, 2, 5, 2, 4, 3, 3};
+		int[] stages = {2, 1, 2, 6, 2, 4, 3, 3};
 		int result[] = solution(N, stages);
 		for(int i = 0; i < result.length; i++)
 			System.out.print(result[i] + " ");
@@ -35,6 +35,12 @@ public class 실패율 {
         int count = 1;
         List<Integer> list = new ArrayList<>(map.keySet());
         for(Integer key : list) {
+        	System.out.println(key);
+        	if(key > N) {
+        		System.out.println("더커!");
+        		sortedMap.put(count++, 0.0);
+        		continue;
+        	}
         	System.out.println((double)map.get(key) / num);
         	sortedMap.put(count, (double)map.get(key) / num);
         	//errors[count++] = (double)map.get(key) / num;
