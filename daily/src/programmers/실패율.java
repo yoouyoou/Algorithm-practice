@@ -20,34 +20,36 @@ public class 실패율 {
 	public static int[] solution(int N, int[] stages) {
         HashMap<Integer, Integer> map = new HashMap<>();
         HashMap<Integer, Double> sortedMap = new HashMap<>();
+        
         int num = stages.length;
-        double[] errors = new double[N];
-        int[] number = new int[N];	// 분모 숫자 넣어두기
         int[] answer = new int[N];
         
-        for(int i = 0; i < stages.length; i++) {
-        	if(map.containsKey(stages[i]))
-        		map.replace(stages[i], map.get(stages[i]) + 1 );
-        	else
-        		map.put(stages[i], 1);
+        //HashMap(스테이지, 0) 세팅
+        for(int i = 1; i <= N; i++)
+            map.put(i, 0);
+        
+        //HashMap(스테이지, 도달한 유저수) 갱신
+        for(int i = 0; i < stages.length; i++){
+            if(!map.containsKey(stages[i]))
+                map.put(stages[i], 0);
+            else
+        	    map.replace(stages[i], map.get(stages[i]) + 1 );
         }
         
+        //HashMap(스테이지, 실패율)
         int count = 1;
         List<Integer> list = new ArrayList<>(map.keySet());
         for(Integer key : list) {
-        	System.out.println(key);
         	if(key > N) {
-        		System.out.println("더커!");
-        		sortedMap.put(count++, 0.0);
+        		sortedMap.put(key, 0.0);
         		continue;
         	}
-        	System.out.println((double)map.get(key) / num);
-        	sortedMap.put(count, (double)map.get(key) / num);
-        	//errors[count++] = (double)map.get(key) / num;
+        	sortedMap.put(key, (double)map.get(key) / num);   //count, (double)
         	num -= map.get(key);
         	count++;
         }
         
+        //sortedMap value값으로 정렬
         List<Integer> list2 = new ArrayList<>(sortedMap.keySet());
         Collections.sort(list2, new Comparator<Integer>() {
 			@Override
@@ -59,13 +61,11 @@ public class 실패율 {
         
         count = 0;
         for(Integer key : list2) {
+            if(key > N)
+                continue;
         	answer[count++] = key;
         }
-        /* HashMap상태 확인
-        List<Integer> list = new ArrayList<>(map.keySet());
-        for(Integer key : list)
-        	System.out.println(key + ", " +map.get(key));
-        */
+        
         return answer;
 	}
 }
