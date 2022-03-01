@@ -16,43 +16,27 @@ public class 다리를지나는트럭 {
 	
 	public static int solution(int length, int weight, int[] truck) {
 		Queue<Integer> q = new LinkedList<Integer>();
-		int answer = 0, count = 0;
+		int answer = 0;
 		int qweight = 0, idx = 0;
 
-		/*
-		qweight += truck[idx];
-		q.offer(truck[idx]);
-		while(!q.isEmpty()) {
-			
-		}
-		*/
-		
-		while(idx != truck.length) {
-			
+		while(idx < truck.length) {
+			System.out.println("idx: " + idx);
 			for(int j = 0; j < length; j++) {	// 트럭이 올라가는 다리 개수
-				System.out.println("트럭 인덱스: " + idx);
-				if(idx == truck.length-1) {		// 트럭이 모두 다리에 진입
-					if(qweight + truck[idx] > weight) {
-						qweight -= q.poll();
-						answer++;
-						count++;
-						continue;
-					}
-					answer += length-count;
-					return answer;
-				}
 				qweight += truck[idx];
 				if(qweight <= weight)
 					q.offer(truck[idx++]);
 				else
 					qweight -= truck[idx];
+            
+                if(idx == truck.length)
+                    break;
 				answer++;
-				System.out.println(q);
 			}
 			qweight -= q.poll();
 		}
-		
-		return answer;
+        //마지막 트럭진입 후 idx가 트럭개수랑 같아져서 while문 빠져나옴
+        answer += length;  //그래서 다리개수만큼 건너는거 도와줘야함
+		return answer + 1;
 	}
 
 }
