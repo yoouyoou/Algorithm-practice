@@ -6,18 +6,19 @@ import java.io.InputStreamReader;
 
 public class 욕심쟁이판다 {
 
-	static int n, ans = 0, max = 0;
+	static int n;
 	static int[][] map;
-	static boolean[][] visited;
+	static int[][] dp;
 	static int[] dr = {-1, 1, 0, 0};	//상하좌우
 	static int[] dc = {0, 0, -1, 1};
 	
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
+		int ans = 0;
 		n = Integer.parseInt(br.readLine());
 		map = new int[n][n];
-		visited = new boolean[n][n];
+		dp = new int[n][n];
 		
 		for(int i = 0; i < n; i++) {
 			String[] str = br.readLine().split(" ");
@@ -27,42 +28,34 @@ public class 욕심쟁이판다 {
 	
 		for(int i = 0; i < n; i++) {
 			for(int j = 0; j < n; j++) {
-				ans = 0;
-				visited[i][j] = true;
-				dfs(i, j);
-				visited[i][j] = false;
-				System.out.println("dfs(" + i + ", " + j + ") = " + ans);
+				int cur = dfs(i, j);
+				ans = cur > ans ? cur : ans;
 			}
 		}
 		
-		System.out.println(max);
+		System.out.println(ans);
 		br.close();
 	}
 	
-	public static void dfs(int r, int c) {
+	public static int dfs(int r, int c) {
 		
-//		visited[r][c] = true;			//방문표시
-		ans++;							//길이 증가
+		if(dp[r][c] != 0)
+			return dp[r][c];
 		
-//		System.out.println("dfs함수(" + r + ", " + c+"): " + ans);
-		if(ans > max)
-			max = ans;
+		dp[r][c] = 1;
 		
 		for(int i = 0; i < 4; i++) {	//상하좌우 방문
 			int nextR = r + dr[i];		//다음으로 움직일 좌표
 			int nextC = c + dc[i];	
 			
+			//격자 범위 내이고, 다음 칸의 수가 더 커서 이동할 수 있는 경우
 			if(nextR >= 0 && nextR < n && nextC >= 0 && nextC < n) {
-				if(map[nextR][nextC] > map[r][c] && !visited[nextR][nextC]) {
-					visited[nextR][nextC] = true;
-					dfs(nextR, nextC);
-					visited[nextR][nextC] = false;
-					ans--;
-				}
+				if(map[nextR][nextC] > map[r][c])
+					dp[r][c] = Math.max(dp[r][c], dfs(nextR, nextC) + 1);
 			}
 		}
 		
-		return;
+		return dp[r][c];
 	}
 
 }
