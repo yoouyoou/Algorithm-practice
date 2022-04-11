@@ -32,24 +32,28 @@ public class b_2098 {
 	}
 	
 	public static void dfs(int x, int num) {
+		System.out.print("현재 방문 도시: " + x + " ("+num+"번째)");
+		
 		if(num == N) {	//모두 방문이 완료되었음
-			if(min > ans + w[x][0])
-				min = ans;
+			if(min > ans + w[x][0]) {
+				min = ans + w[x][0];
+//				System.out.println("min값: " + min + "갱신!");
+			}
 			return;
 		}
-			
-		//visited배열이 모두 찬 경우를 봐야하는데 흠
-		visited[x] = true;
+		
+		visited[x] = true;	//방문 표시
 		
 		for(int i = 0; i < N; i++) {
-			if(!visited[i] && w[x][i] != 0) {	//방문안함
+			if(!visited[i] && w[x][i] != 0 && i != x) {	//방문안함
+//				System.out.println("-> " + i);
 				ans += w[x][i];
 				dfs(i, num+1);
-				visited[x] = false;
+				visited[i] = false;
 				ans -= w[x][i];
 			}
 		}
-//		visited[x] = false;
+		visited[x] = false;
 		return;
 	}
 
