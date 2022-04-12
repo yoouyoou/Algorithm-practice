@@ -3,21 +3,23 @@ package boj;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 //외판원 순회
 public class b_2098 {
 
 	static int[][] w;
+	static int[][] dp;
 	static int N;
-	static boolean[] visited;
-	static int ans = 0, min = Integer.MAX_VALUE;
+	static final int INF = 11000000;	//MAX: 11,000,000
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		N = Integer.parseInt(br.readLine());
 		w = new int[N][N];
-		visited = new boolean[N];
+		dp = new int[N][(1 << N) - 1];	//[현재 위치 도시][지금까지 방문한 도시 2진수]
+		
 				
 		//input
 		for(int i = 0; i < N; i++) {
@@ -26,35 +28,34 @@ public class b_2098 {
 				w[i][j] = Integer.parseInt(str[j]);
 		}
 		
+		//dp초기화
+		for(int i = 0; i < N; i++)
+			Arrays.fill(dp[i], INF);
+		
 		//solution
-		dfs(0, 1);	//0번 도시부터 방문시작
-		System.out.println(min);
+		int ans = dfs(0, 1);	//0번 도시부터 방문시작: 어느 도시에서 시작하든 최소비용은 동일
+		System.out.println(ans);
 	}
 	
-	public static void dfs(int x, int num) {
-		System.out.print("현재 방문 도시: " + x + " ("+num+"번째)");
-		
-		if(num == N) {	//모두 방문이 완료되었음
-			if(min > ans + w[x][0]) {
-				min = ans + w[x][0];
-//				System.out.println("min값: " + min + "갱신!");
-			}
-			return;
+	private static int dfs(int x, int visited) {
+		if(visited == (1 << N)-1) {
+			if(w[x][0] == 0)	//혹시나
+				return INF;
+			
+			return w[x][0];
 		}
 		
-		visited[x] = true;	//방문 표시
+		if(dp[x][visited] != INF)
+			return dp[x][visited];
 		
+		//현재 도시에서 각 i의 도시로 DFS수행
 		for(int i = 0; i < N; i++) {
-			if(!visited[i] && w[x][i] != 0 && i != x) {	//방문안함
-//				System.out.println("-> " + i);
-				ans += w[x][i];
-				dfs(i, num+1);
-				visited[i] = false;
-				ans -= w[x][i];
+			if((visited & (1 << i)) == 0 && w[x][i] != 0) {
+				dp[x][visited] = Math.min(dp[x][visited], dfs(i, visited | (1 << i)) + w[x][i]);
 			}
 		}
-		visited[x] = false;
-		return;
+		
+		return dp[x][visited];
 	}
 
 }
