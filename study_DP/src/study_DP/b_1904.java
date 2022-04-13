@@ -4,33 +4,31 @@ import java.util.Scanner;
 
 //01타일
 public class b_1904 {
-
-	public static int[] dp = new int[1000001];
 	
 	public static void main(String[] args) {
-		Scanner in = new Scanner(System.in);
+		Scanner sc = new Scanner(System.in);
+		int N = sc.nextInt();
 		
-		int N = in.nextInt();
+		if(N == 1) {
+			System.out.println("1");
+			return;
+		}
 		
-		dp[0] = 0;
+		if(N == 2) {
+			System.out.println("2");
+			return;
+		}
+		
+		int[] dp = new int[N+1];
 		dp[1] = 1;
 		dp[2] = 2;
- 
-		// -1 로 초기화
-		for(int i = 3; i < dp.length; i++) {
-			dp[i] = -1;
+		
+		for(int i = 3; i <= N; i++) {
+			dp[i] = dp[i-1] + dp[i-2];
+			dp[i] %= 15746;
 		}
 		
-		System.out.println(Tile(N));
-
-	}
-	
-	public static int Tile(int N) {
-		
-		if(dp[N] == -1) {
-			dp[N] = (Tile(N - 1) + Tile((N - 2))) % 15746;
-		}
-		return dp[N];
+		System.out.println(dp[N]);
 	}
 
 }
