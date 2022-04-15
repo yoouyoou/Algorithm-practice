@@ -1,27 +1,35 @@
 package 이코테;
 
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class dp {
 
 	public static void main(String[] args) {
-		int N = 26;
-		int[] dp = new int[N+1];	//i를 1로 만들기 위한 최소 연산횟수
+		Scanner sc = new Scanner(System.in);
+		int N = sc.nextInt();	//화폐 단위
+		int M = sc.nextInt();	//최소 가치
+		int[] money = new int[N];
+		int[] dp = new int[M+1];
 		
-		dp[1] = 0; // 1인 경우 연산을 수행할 필요가 없기 때문에
 		
-		for(int i = 2; i <= N; i++) {
-			dp[i] = dp[i-1] + 1;	//현재 수에서 1을 빼서 나온 연산횟수
-			
-			if(i % 2 == 0)
-				dp[i] = Math.min(dp[i], dp[i/2] + 1);
-			
-			if(i % 3 == 0)
-				dp[i] = Math.min(dp[i], dp[i/3] + 1);
-			
-			if(i % 5 == 0)
-				dp[i] = Math.min(dp[i], dp[i/5] + 1);
+		for(int i = 0; i < N; i++)
+			money[i] = sc.nextInt();
+		
+		Arrays.fill(dp, 10001);
+		dp[0] = 0;
+		
+		for(int i = 0; i < N; i++) {
+			for(int j = 0; j <= M - money[i]; j++)
+				if(dp[j] != 10001)
+					dp[j + money[i]] = Math.min(dp[j+money[i]], dp[j] + 1);
+				
 		}
 		
-		System.out.println(dp[N]);
+		if(dp[M] == 10001)
+			System.out.println("-1");
+		else
+			System.out.println(dp[M]);
 	}
 
 }
