@@ -4,32 +4,52 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class dp {
-
+	
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();	//화폐 단위
-		int M = sc.nextInt();	//최소 가치
-		int[] money = new int[N];
-		int[] dp = new int[M+1];
+		//testcase1 -> 19
+		int n = 3;
+		int m = 4;
+		int[][] map = {{1, 3, 3, 2},
+				{2, 1, 4, 1},
+				{0, 6, 4, 7}};
 		
+		//testcase2 -> 16
+//		int n = 4;
+//		int m = 4;
+//		int[][] map = {{1, 3, 1, 5},
+//				{2, 2, 4, 1},
+//				{5, 0, 2, 3},
+//				{0, 6, 1, 2}};
 		
-		for(int i = 0; i < N; i++)
-			money[i] = sc.nextInt();
+		int[][] dp = new int[n][m];
+		for(int i = 0; i < n; i++)
+			dp[i][0] = map[i][0];
 		
-		Arrays.fill(dp, 10001);
-		dp[0] = 0;
-		
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j <= M - money[i]; j++)
-				if(dp[j] != 10001)
-					dp[j + money[i]] = Math.min(dp[j+money[i]], dp[j] + 1);
+		for(int i = 1; i < m; i++) {		//열 검사
+			for(int j = 0; j < n; j++) {	//행 검사
+				int leftUp=0, leftDown=0, left=0;
 				
+				//[j-1][i-1] //[j][i-1]  //[j+1][i-1]
+				if(j-1 >= 0 && j-1 < n)
+					leftUp = dp[j-1][i-1];
+				
+				if(j >= 0 && j < n)
+					left = dp[j][i-1];
+				
+				if(j+1 >= 0 && j+1 < n)
+					leftDown = dp[j+1][i-1];
+				
+				dp[j][i] = Math.max(leftUp, Math.max(leftDown, left)) + map[j][i];
+			}
 		}
 		
-		if(dp[M] == 10001)
-			System.out.println("-1");
-		else
-			System.out.println(dp[M]);
+		int ans = 0;
+		for(int i = 0; i < n; i++) {
+			if(ans < dp[i][m-1])
+				ans = dp[i][m-1];
+		}
+		
+		System.out.println(ans);
 	}
 
 }
