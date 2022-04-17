@@ -55,6 +55,7 @@ public class b_11404 {
 			System.out.println();
 		}
 		
+		sc.close();
 	}
 
 }

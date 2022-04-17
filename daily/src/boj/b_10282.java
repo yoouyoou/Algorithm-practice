@@ -3,7 +3,7 @@ package boj;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//해킹
+//해킹(골드4)
 public class b_10282 {
 
 	static int n, d, c;
@@ -50,6 +50,7 @@ public class b_10282 {
 		for(int i = 0; i < list.get(x).size(); i++) {	//해킹컴의 의존컴들
 			Node n = list.get(x).get(i);
 			
+			//방문안했거나 기존 걸리는 초가 더 오래걸리는 경우
 			if(visited[n.idx] == 0 || visited[n.idx] > n.second) {
 				visited[n.idx] = n.second;
 				dfs(n.idx);
