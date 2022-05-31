@@ -1,6 +1,8 @@
 package boj;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 //키로거
@@ -20,12 +22,36 @@ public class b_5397 {
 	}
 	
 	public static void solution(String str) {
-		int idx = 0;	//idx는 그 다음 글자가 들어갈 list의 인덱스 값을 가리킴
-		ArrayList<Character> list = new ArrayList<>();
+		LinkedList<Character> lnklist = new LinkedList<>();
+		ListIterator<Character> list = lnklist.listIterator();
 		
 		for(int i = 0; i < str.length(); i++) {
 			char ch = str.charAt(i);
-					
+				
+			switch(ch) {
+			case '<':
+				if(list.nextIndex() > 0)
+					list.previous();
+				break;
+				
+			case '>':
+				if(list.nextIndex() < lnklist.size())
+					list.next();
+				break;
+				
+			case '-':
+				if(list.nextIndex() > 0) {
+					list.previous();
+					list.remove();
+				}
+				break;
+				
+			default:
+				list.add(ch);
+				break;
+			}
+			
+			/*
 			if(ch == '<') {
 				if(idx > 0)
 					idx--;
@@ -44,10 +70,13 @@ public class b_5397 {
 				list.add(idx, ch);
 				idx++;
 			}
+			*/
 		}
 		
-		for(char c: list)
-			System.out.print(c);	
+		StringBuilder sb = new StringBuilder();
+		for(char c: lnklist)
+			sb.append(c);
+		System.out.println(sb.toString());
 	}
 
 }
