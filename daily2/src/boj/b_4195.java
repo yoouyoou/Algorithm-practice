@@ -8,8 +8,9 @@ import java.util.Scanner;
 public class b_4195 {
 
 	static int[] parent;
+	static int[] count;
 	static HashMap<String, Integer> map;
-	
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
@@ -18,10 +19,12 @@ public class b_4195 {
 		for(int i = 0; i < testcase; i++) {
 			int F = sc.nextInt();	//친구 관계 수
 			int idx = 1;
-			parent = new int[100000];
+			parent = new int[200001];
+			count = new int[200001];
 			map = new HashMap<>();
 			
-			for(int a = 1; a < 100000; a++)
+			Arrays.fill(count, 1);
+			for(int a = 1; a <= 200000; a++)
 				parent[a] = a;
 			
 			for(int j = 0; j < F; j++) {
@@ -42,15 +45,29 @@ public class b_4195 {
 	}
 	
 	public static void solution(String s1, String s2) {
-		int sum = 0, temp;
-		union(map.get(s1), map.get(s2));
-		temp = find(map.get(s1));
-		
-		for(int i = 1; i < parent.length; i++)
-			if(parent[i] == temp)
-				sum++;
 
-		System.out.println(sum);
+//		if(find(t1) == find(t2)) {	//동일한 친구 관계가 나왔을 경우
+//			System.out.println( count[find(map.get(s1))] );
+//			return;
+//		}
+		
+		union(map.get(s1), map.get(s2));
+		System.out.println( count[find(map.get(s1))] );
+	}
+	
+	public static void union(int x, int y) {
+		x = find(x);
+		y = find(y);
+		
+		if(x == y)	return;
+		else if(x < y) {
+			parent[y] = x;
+			count[x] += count[y];
+		}
+        else {
+        	parent[x] = y;
+        	count[y] += count[x];
+        }
 	}
 	
 	public static int find(int x) {
@@ -58,14 +75,6 @@ public class b_4195 {
 			return x;
 		
 		return parent[x] = find(parent[x]);	
-	}
-	
-	public static void union(int x, int y) {
-		x = find(x);
-		y = find(y);
-		
-		if(x != y)
-			parent[y] = x;
 	}
 	
 
