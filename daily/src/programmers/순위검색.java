@@ -2,10 +2,12 @@ package programmers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class 순위검색 {
 
-	static ArrayList<Applicant> list = new ArrayList<>();
+	static HashMap<String, List<Integer>> map;
 	
 	public static void main(String[] args) {
 		String[] info = {"java backend junior pizza 150",
@@ -28,98 +30,57 @@ public class 순위검색 {
 	
 	public static int[] solution(String[] info, String[] query) {
 		int[] answer = new int[query.length];
-//		char[] temp = new char[4];
-		int idx = 0;
-		String[] str;
+		map = new HashMap<String, List<Integer>>();
 		
-		//info쪼개서 넣기
-		for(String i: info) {
-			char[] temp = new char[4];
-			str = i.split(" ");
-			
-			for(int j = 0; j < 4; j++)
-				temp[j] = str[j].charAt(0);
-			
-			list.add(new Applicant(temp, Integer.parseInt(str[4])));
+		for(int i = 0; i < info.length; i++) {
+			String[] s = info[i].split(" ");
+			combInfo(s, "", 0);
 		}
-
-		Collections.sort(list);	//점수로 오름차순
 		
-//		for(Applicant l: list)
-//			System.out.print(l.test +" ");
-//		System.out.println();
+		for(String key: map.keySet())
+			Collections.sort(map.get(key));
 		
-		//query쪼개기
-		for(String q: query) {
-			char[] temp = new char[4];
-			str = q.split(" and ");
-			
-			for(int j = 0; j < 3; j++) 
-				temp[j] = str[j].charAt(0);
-			
-			str = str[3].split(" ");
-			temp[3] = str[0].charAt(0);
-			int score = Integer.parseInt(str[1]);
-		
-			answer[idx++] = count(temp, score);
+		for(int i = 0; i < query.length; i++) {
+			query[i] = query[i].replaceAll(" and ", "");
+			String[] s = query[i].split(" ");
+			answer[i] = map.containsKey(s[0]) ? binarySearch(s[0], Integer.parseInt(s[1])) : 0;
 		}
 		
 		return answer;
 	}
 	
-	public static int count(char[] condition, int test) {
-		int ans = 0, t;
-		boolean flag;
-		
-		for(int i = binarySearch(test); i < list.size(); i++) {
-			
-			System.out.println("i:" + i);
-//			if(list.get(i).test < test)
-//				continue;
-			
-			flag = true;
-			t = 0;
-			
-			f1:
-			for(char c: list.get(i).arr) {
-				if(condition[t] == '-') {
-					t++;
-					continue;
-				}
-				
-				if(c != condition[t++]) {
-					flag = false;
-					break f1;
-				}
-				
-			}
-			
-			if(flag) {
-				ans++;
-				flag = true;
-			}
-		}
-		
-		return ans;
-	}
+    private static void combInfo(String[] p, String str, int cnt) {
+        if (cnt == 4) {
+            if (!map.containsKey(str)) {
+                List<Integer> list = new ArrayList<Integer>();
+                map.put(str, list);
+            }
+            map.get(str).add(Integer.parseInt(p[4]));
+            return;
+        }
+        combInfo(p, str + "-", cnt + 1);
+        combInfo(p, str + p[cnt], cnt + 1);
+    }
 	
-	public static int binarySearch(int score) {
-		int start = 0, end = list.size() - 1;
-		
-		while(start <= end) {
-			int mid = (start + end) / 2;
-			if(list.get(mid).test < score)
-				start = mid + 1;
-			else
-				end = mid - 1;
-		}
-		
-		return start;
-	}
+	
+    private static int binarySearch(String key, int score) {
+        List<Integer> list = map.get(key);
+        int start = 0, end = list.size() - 1;
+ 
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (list.get(mid) < score)
+                start = mid + 1;
+            else
+                end = mid - 1;
+        }
+ 
+        return list.size() - start;
+    }
 
 }
 
-class Applicant implements Comparable<Applicant>{
+/*class Applicant implements Comparable<Applicant>{
 	char[] arr = new char[4];
 	int test;
 	
@@ -137,4 +98,4 @@ class Applicant implements Comparable<Applicant>{
 	}
 
 	
-}
+}*/
