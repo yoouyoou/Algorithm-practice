@@ -71,10 +71,11 @@ public class 순위검색 {
 		int ans = 0, t;
 		boolean flag;
 		
-		for(int i = 0; i < list.size(); i++) {
+		for(int i = binarySearch(test); i < list.size(); i++) {
 			
-			if(list.get(i).test < test)
-				continue;
+			System.out.println("i:" + i);
+//			if(list.get(i).test < test)
+//				continue;
 			
 			flag = true;
 			t = 0;
@@ -100,6 +101,20 @@ public class 순위검색 {
 		}
 		
 		return ans;
+	}
+	
+	public static int binarySearch(int score) {
+		int start = 0, end = list.size() - 1;
+		
+		while(start <= end) {
+			int mid = (start + end) / 2;
+			if(list.get(mid).test < score)
+				start = mid + 1;
+			else
+				end = mid - 1;
+		}
+		
+		return start;
 	}
 
 }
