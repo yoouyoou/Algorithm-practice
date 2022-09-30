@@ -8,13 +8,16 @@ public class 조합연습 {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		int ans = 1;
+//		int ans = 1;
 		
-		for(int i = 1; i <= N; i++) 
-			ans *= i;
-		
-		System.out.println(ans);
+		System.out.println(factorial(N));
 		sc.close();
+	}
+	
+	public static int factorial(int N) {
+		if(N <= 1)
+			return 1;
+		return N * factorial(N-1);
 	}
 
 }
