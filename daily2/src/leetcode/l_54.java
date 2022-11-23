@@ -13,7 +13,7 @@ public class l_54 {
 		};
 		
 		for(int s: spiralOrder(m)) {
-//			System.out.print(s + " ");
+			System.out.print(s + " ");
 		}
 	}
 	
@@ -24,78 +24,50 @@ public class l_54 {
 		boolean[][] visited = new boolean[m][n];
 		
 		int r = 0, c = 0, idx = 0, cnt = 0;
-		
-		while(true) {
-			
-			if(cnt >= m * n)
-				return list;
-			
-			if(idx == 0) {	// →
-				System.out.println("인덱스0 진입");
-				while(c < n) {
-					if(!visited[r][c]) {
-						visited[r][c] = true;
-						list.add(matrix[r][c]);
-						cnt++;
-					}
-					c++;
+		while(cnt < m * n) {
+
+			if(idx == 0) {
+				while(c < n && !visited[r][c]) {
+					list.add(matrix[r][c]);
+					visited[r][c] = true;
+					c++; cnt++;
 				}
+				r++; c--;
 				idx = 1;
-				c--;
 			}
 			
-			if(idx == 1) { // ↓
-				System.out.println("인덱스1 진입");
-				while(r < m) {
-					if(!visited[r][c]) {
-						visited[r][c] = true;
-						list.add(matrix[r][c]);
-						cnt++;
-					}
-					r++;
+			if(idx == 1) {
+				while(r < m && !visited[r][c]) {
+					list.add(matrix[r][c]);
+					visited[r][c] = true;
+					r++; cnt++;
 				}
+				c--; r--;
 				idx = 2;
-				r--;
 			}
 			
-			if(idx == 2) {	// ←
-				while(c >= 0) {
-					if(!visited[r][c]) {
-						visited[r][c] = true;
-						list.add(matrix[r][c]);
-						cnt++;
-					}
-					c--;
+			if(idx == 2) {
+				while(c >= 0 && !visited[r][c]) {
+					list.add(matrix[r][c]);
+					visited[r][c] = true;
+					c--; cnt++;
 				}
-				idx++;
-				c++;
-				System.out.println("c요: " + c);
+				r--; c++;
+				idx = 3;
 			}
 			
-			if(idx == 3) {		// ↑
-				while(r >= 0) {
-					if(!visited[r][c]) {
-						visited[r][c] = true;
-						list.add(matrix[r][c]);
-						cnt++;
-						r--;
-					}
-					else
-						break;
-//					r--;
+			if(idx == 3) {
+				while(r >= 0 && !visited[r][c]) {
+					list.add(matrix[r][c]);
+					visited[r][c] = true;
+					r--; cnt++;
 				}
+				c++; r++;
 				idx = 0;
-//				r++;
 			}
-			
-			for(int t: list)
-				System.out.print(t + " ");
-			System.out.println();
-			
 		}
 		
-//		return list;
-		
+		return list;
 	}
 
 }
