@@ -1,3 +1,2 @@
 INDEX VERSION 1.131+C:\Users\user\Desktop\새 폴더\코테연습\.metadata\.plugins\org.eclipse.jdt.core
-2184263000.index
-2145867518.index
+867096231.index
