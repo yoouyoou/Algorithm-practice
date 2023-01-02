@@ -1,62 +1,52 @@
 package programmers;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class 신고결과받기 {
 
 	public static void main(String[] args) {
-		String[] id_list = {"con", "ryan"};//{"muzi", "frodo", "apeach", "neo"};
-		String[] report = {"ryan con", "ryan con", "ryan con", "ryan con"};//{"muzi frodo","apeach frodo","frodo neo","muzi neo","apeach muzi"};
-		int k = 3;
+		String[] id_list = {"muzi", "frodo", "apeach", "neo"}; //{"con", "ryan"};
+		String[] report = {"muzi frodo","apeach frodo","frodo neo","muzi neo","apeach muzi"}; //{"ryan con", "ryan con", "ryan con", "ryan con"};
+		int k = 2;
 		
 		for(int s : solution(id_list, report, k))
 			System.out.print(s);
 	}
 
     public static int[] solution(String[] id_list, String[] report, int k) {
-    	HashMap<String, Integer> map = new HashMap<>();
-    	HashMap<String, Integer> count = new HashMap<>();
-    	int num = id_list.length;
-    	int idx = 0;
-    	int[][] matrix = new int[num][num];
+    	int num = id_list.length, idx = 0;
         int[] answer = new int[num];
-        int[] user = new int[num];		//k번 이상 신고된 유저를 저장해두기 위한 배열
-        Arrays.fill(user, -1);
+        boolean[] flag = new boolean[num];
+    	HashMap<String, Set<String>> map = new HashMap<>();
+    	HashMap<String, Integer> noMap = new HashMap<>();
+    	String[] user = new String[num];		//k번 이상 신고된 유저를 저장해두기 위한 배열
         
         for(String s: id_list) {
-        	map.put(s, idx++);
-        	count.put(s, 0);
+        	map.put(s, new HashSet<String>());
+        	noMap.put(s, idx++);	//0부터 번호 넘버링
         }
         
         idx = 0;      
         for(int i = 0; i < report.length; i++) {
         	String[] str = report[i].split(" ");
-        	System.out.println(str[0] + " -> " + str[1]);
-        	if(matrix[map.get(str[0])][map.get(str[1])] == 0) {
-            	matrix[map.get(str[0])][map.get(str[1])] = 1;
-            	count.put(str[1], count.get(str[1]) + 1);
-        	}
+        	map.get(str[1]).add(str[0]);		//신고당한 사람 조합에 신고자 넣기
+        	map.put(str[1], map.get(str[1]));	//신고당한사람 갱신
         	
-        	if(count.get(str[1]) == k) {
-        		user[idx++] = map.get(str[1]);
-        		System.out.println(str[1] + "("+ map.get(str[1]) + ")" + " 신고 k번 달성!");
+        	if(map.get(str[1]).size() == k && !flag[noMap.get(str[1])]) {
+        		user[idx++] = str[1];						//신고당한 유저
+        		flag[noMap.get(str[1])] = true;
         	}
-        }
-        
-        System.out.println("matrix-----");
-        for(int i = 0; i < num; i++) {
-        	for(int j = 0; j < num; j++)
-        		System.out.print(matrix[i][j] + " ");
-        	System.out.println();
         }
         
         idx = 0;
-        while(user[idx] != -1) {
-        	System.out.println(user[idx] + "가 k번 신고 당한 유저번호");
-        	for(int i = 0; i < num; i++)
-        		if(matrix[i][user[idx]] != 0)
-        			answer[i]++;
+        while(user[idx] != null) {
+        	Iterator<String> it = map.get(user[idx]).iterator();
+        	while(it.hasNext()) {
+        		answer[noMap.get(it.next())]++;
+        	}	
         	idx++;
         }
         
