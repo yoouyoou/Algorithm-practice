@@ -33,7 +33,6 @@ public class 신고결과받기 {
         for(int i = 0; i < report.length; i++) {
         	String[] str = report[i].split(" ");
         	map.get(str[1]).add(str[0]);		//신고당한 사람 조합에 신고자 넣기
-        	map.put(str[1], map.get(str[1]));	//신고당한사람 갱신
         	
         	if(map.get(str[1]).size() == k && !flag[noMap.get(str[1])]) {
         		user[idx++] = str[1];						//신고당한 유저
